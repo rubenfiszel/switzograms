@@ -1,0 +1,6 @@
+__pycache__/
+*.txt
+.ipynb_checkpoints/
+*.zip
+*.mini
+*.graph
