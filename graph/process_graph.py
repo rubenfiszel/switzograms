@@ -32,20 +32,15 @@ def compute_all_paths(G, nodes):
         length = nx.shortest_path_length(G, source=source, weight="weight")
         length = defaultdict(lambda: -1, length)
         for target in nodes:
-            # print(length[target])
-            # print('something is going wrong here', source, target)
             matrix[n_to_i[source]][n_to_i[target]] = float(length[target])
 
-    # print(nodes)
-    # print(matrix)
-    # print(type(matrix))
-    return nodes, matrix
+    return nodes, matrix.tolist()
 
 def write_all_paths(nodes, matrix):
-    with open("nodes", "w+") as nodes_file:
+    with open("../res/full_nodes", "w+") as nodes_file:
         nodes_file.write(jsonpickle.encode(nodes))
 
-    with open("matrix", "w+") as matrix_file:
+    with open("../res/full_matrix", "w+") as matrix_file:
         matrix_file.write(jsonpickle.encode(matrix))
 
     nodes_file.close()
@@ -65,8 +60,9 @@ def load_paths():
 if __name__ == "__main__":
     print("Load graph", datetime.datetime.now().time())
     G = nx.read_gpickle("complete.graph")
-    with open('center_nodes', 'rb') as f:
+    with open('../res/full_nodes', 'rb') as f:
         nodes = pickle.load(f)
+    print(nodes[:10])
     # nodes = G.nodes()[:50] ##TOREPLACEALEXISBYYOURTHING
     nodes, matrix = compute_all_paths(G, nodes)
     write_all_paths(nodes, matrix)

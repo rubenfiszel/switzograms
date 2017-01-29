@@ -1,0 +1,28 @@
+{
+  "name": "re-tardis",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/paeby/re-TARDIS.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/paeby/re-TARDIS/issues"
+  },
+  "homepage": "https://github.com/paeby/re-TARDIS#readme",
+  "devDependencies": {
+    "awesome-typescript-loader": "^3.0.0-beta.17",
+    "source-map-loader": "^0.1.5",
+    "typescript": "^2.1.4"
+  },
+  "dependencies": {
+    "@types/three": "0.0.28",
+    "three": "^0.83.0"
+  }
+}

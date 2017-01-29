@@ -1,0 +1,42 @@
+{
+  "name": "re-tardis",
+  "version": "1.0.0",
+  "description": "",
+  "main": "bundle.js",
+  "dependencies": {
+    "@types/awesomplete": "^1.1.2",
+    "@types/stats": "^0.16.30",
+    "@types/three": "^0.83.1",
+    "@types/tween.js": "0.0.31",
+    "awesomplete": "^1.1.1",
+    "es6-promise": "^4.0.5",
+    "file-loader": "^0.9.0",
+    "json-loader": "^0.5.4",
+    "pace-progress": "^1.0.2",
+    "stats.js": "^0.17.0",
+    "three": "^0.83.0",
+    "three-orbitcontrols-ts": "^0.1.2",
+    "three-text2d": "^0.3.0",
+    "ts-loader": "^1.3.3",
+    "tween.js": "^16.3.5",
+    "typescript": "^2.1.4",
+    "url-loader": "^0.5.7"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/paeby/re-TARDIS.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/paeby/re-TARDIS/issues"
+  },
+  "homepage": "https://github.com/paeby/re-TARDIS#readme",
+  "devDependencies": {
+    "@types/node": "^6.0.57",
+    "awesome-typescript-loader": "^3.0.0-beta.17"
+  }
+}
