@@ -1,0 +1,17 @@
+{
+    "baseDir": "src/",    
+    "compilerOptions": {
+        "outDir": "./dist/",
+        "sourceMap": true,
+        "noImplicitAny": false,
+        "module": "commonjs",
+        "target": "es6",
+        "removeComments": true,
+        "watch": true
+    },
+    "exclude": [
+    "node_modules",
+    "test",
+    "lib"
+  ]
+}

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset=utf-8>
+	<title>Switzerland</title>
+	<link rel="stylesheet" href="load.css">
+	<link rel="stylesheet" href="nav.css">
+	<link rel="stylesheet" href="pure-min.css">
+	<link rel="stylesheet" href="awesomplete.css">
+	<style>
+		body,
+		html {
+			margin: 0;
+			height: 100%;
+			background-color: #333;
+			overflow: hidden;
+		}
+		
+		canvas {
+			width: 100%;
+			height: 100%
+		}
+		
+		#opennav {
+			color: black;
+			position: absolute;
+			top: 20px;
+			left: 20px;
+			font-size: 20px;
+			cursor: pointer;
+		}
+		
+		.innernav {
+			margin: 25px;
+			margin-top: 10px;
+		}
+		
+		#cities {
+			margin-top: 30px;
+			font-size: 20px;
+		}
+		
+		#top {
+		    padding-top: 30px; /* Place content 60px from the top */
+			padding-bottom: 10px;
+			background-color: white;
+		}
+		.pure-menu-link {
+			color: black;
+			background-color: lightgray;
+			margin-bottom: 5px;
+		}
+		
+		.closeitem {
+			float: right;
+			font-size: 20px;
+		}
+	</style>
+</head>
+
+<body>
+	<div id="loading" class="sk-folding-cube">
+		<div class="sk-cube1 sk-cube"></div>
+		<div class="sk-cube2 sk-cube"></div>
+		<div class="sk-cube4 sk-cube"></div>
+		<div class="sk-cube3 sk-cube"></div>
+	</div>
+	<script type="x-shader/x-vertex" id="vertexshader">
+		attribute float size; void main() { vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 ); gl_PointSize = size * (300.0/-mvPosition.z);
+		gl_Position = projectionMatrix * mvPosition; }
+	</script>
+	<script type="x-shader/x-fragment" id="fragmentshader">
+		uniform vec3 color; uniform sampler2D texture; void main() { gl_FragColor = vec4( color, 1.0 ); gl_FragColor = gl_FragColor
+		* texture2D( texture, gl_PointCoord ); }
+	</script>
+	<div id="mySidenav" class="sidenav">
+		<a href="#" id="closenav" class="closebtn">&times;</a>
+		<div id="top">
+			<div class="innernav">
+				<h2>Cities</h2>
+				<div class="pure-form">
+					<input id="city" placeholder="type a city here" type="text"></input>
+				</div>
+			</div>
+		</div>
+		<div class="innernav">
+			<ul id="cities" class="pure-menu-list">
+			</ul>
+		</div>
+	</div>
+	<button class="pure-button" id="opennav" style="visibility: hidden;">&#9776; Cities</button>
+	<script src="bundle.js"></script>
+</body>
+
+</html>
