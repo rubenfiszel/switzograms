@@ -6,14 +6,14 @@ import TWEEN = require('tween.js');
 require('awesomplete');
 import { OrbitControls } from 'three-orbitcontrols-ts';
 
-var stops = require('../res/stops.json')
-var cities: Map<string, any> = require('../res/cities.json')
+var stops = require('../../res/stops.json')
+var cities: Map<string, any> = require('../../res/cities.json')
 
-var centers = require('../res/centers.json')
-var nodes: number[] = require('../res/nodes.json')
-var matrix: number[][] = require('../res/matrix.json')
+var centers = require('../../res/centers.json')
+var nodes: number[] = require('../../res/nodes.json')
+var matrix: number[][] = require('../../res/matrix.json')
 
-var spark1 = require("url?mimetype=image/png!../res/spark1.png");
+var spark1 = require("url?mimetype=image/png!../../res/spark1.png");
 var diameter = 3.25
 var height_fly = 30;
 var height_base = 3.0;
