@@ -14,9 +14,9 @@ var matrix: number[][] = require('../../res/matrix.json')
 
 var spark1 = require("url?mimetype=image/png!../../res/spark1.png");
 var diameter = 3.25
-var height_fly = 30;
+var height_fly = 1;
 var height_base = 3.0;
-var height_factor = 4.0;
+var height_factor = 1;
 var dotSize = 6.0;
 
 
@@ -272,12 +272,10 @@ function genTiles() {
             var tile: CBMesh = tiles[t_index];
             //var distance = tile.position.distanceTo(id_to_tile.get(id).position)
             var distance = matrix[id-1][tile.ID-1];
-            console.log(distance + " --- " + id + " --- "+ tile.ID)
-            console.log(matrix.length + "  "+matrix[id-1].length)
-            var timeout = distance * 5 //the more distance there is, the more timeout (for a wave effect)
-            var color = new THREE.Color("hsl(" + (150-(distance / 2.5)) + ", " + color_s + "%, " + color_l + "%)")
+            var timeout = Math.max(1, distance * 5) //the more distance there is, the more timeout (for a wave effect)
+            //var color = new THREE.Color("hsl(" + (150-(distance / 2.5)) + ", " + color_s + "%, " + color_l + "%)")
+            var color = colors[distance]
             var material = <THREE.MeshPhongMaterial>tile.material;
-
             function changeColor(material, color, id, time): () => any {
                 return () => {
                     material.color.set(color)
@@ -285,7 +283,7 @@ function genTiles() {
                         var sprite = tile_to_sprite[id]
                         sprite.text = tile_to_name[id] + " " + Math.floor(time) + "''"
                     }
-                    if (distance == -1) {
+                    if (time == -1) {
                         material.opacity = 0.6
                         material.color.set(new THREE.Color("gray"));
                         material.transparent = true
@@ -352,7 +350,8 @@ function generateColorPalette() {
     var i = 360 / (total - 1); // distribute the colors evenly on the hue range
 
     for (var x = 0; x < total; x++) {
-        var value = (150 - ((i * x) / (360 / 150)))
+        //var value = (150 - ((i * x) / (360 / 150)))
+        var value = (120 + ((i*x)/(360/240)))
         var color = new THREE.Color("hsl(" + value + ", " + color_s + "%, " + color_l + "%)")
         colors.push(color); // you can also alternate the saturation and value for even more contrast between the colors
     }
@@ -363,11 +362,11 @@ function addColorPalette() {
     var material = new THREE.MeshPhongMaterial({ color: 0x5e7eff, overdraw: 0.5, shading: THREE.FlatShading, shininess: 0, specular: 0 });
     var geometry = new THREE.CylinderGeometry(diameter / 1.2, diameter / 1.2, 5, 6);
 
-    for (var i = 0; i < num_colors; i = i + 5) {
+    for (var i = 0; i < num_colors; i = i + 15) {
         var mat = material.clone()
         mat.color.set(colors[i])
         var tile = new THREE.Mesh(geometry, mat)
-        tile.position.set(80 + (i / 5) * diameter * 1.3, -100, 40)
+        tile.position.set(80 + (i / 15) * diameter * 1.3, -100, 40)
         tile.rotation.x = Math.PI / 2;
         tile.rotation.y = Math.PI / 2;
         tile.updateMatrix();
@@ -376,17 +375,17 @@ function addColorPalette() {
         tile.receiveShadow = true;
         scene.add(tile);
 
-        if (i % 30 === 0) {
-            var sprite = new SpriteText2D(i.toString(), { align: textAlign.center, font: '50px Arial', fillStyle: '#FFFFFF', antialias: true })
+        if (i % 60 === 0) {
+            var sprite = new SpriteText2D((i/60).toString(), { align: textAlign.center, font: '50px Arial', fillStyle: '#FFFFFF', antialias: true })
             sprite.material.depthTest = false;
-            sprite.position.set(80 + (i / 5) * diameter * 1.3, -100, 45);
+            sprite.position.set(80 + (i / 15) * diameter * 1.3, -100, 45);
             sprite.scale.set(0.1, 0.1, 0.1)
             scene.add(sprite);
         }
 
-        var sprite = new SpriteText2D("Travel time [minutes]", { align: textAlign.center, font: '50px Arial', fillStyle: '#FFFFFF', antialias: true })
+        var sprite = new SpriteText2D("Travel time [hours]", { align: textAlign.center, font: '50px Arial', fillStyle: '#FFFFFF', antialias: true })
         sprite.material.depthTest = false;
-        sprite.position.set(80 + (num_colors / 10) * diameter * 1.3, -90, 45);
+        sprite.position.set(120, -90, 45);
         sprite.scale.set(0.1, 0.1, 0.1)
         scene.add(sprite);
     }
