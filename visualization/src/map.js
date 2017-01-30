@@ -134,6 +134,7 @@ function addCity(name, tile_id) {
     sprite.position.set(tile_pos.x - 8, tile_pos.y + 10, 100);
     sprite.scale.set(0.1, 0.1, 0.1)
     scene.add(sprite);
+  //  console.log(tile_id + " " + name)
     tile_to_sprite[tile_id] = sprite
     tile_to_name[tile_id] = name
 
@@ -268,13 +269,14 @@ function genTiles() {
 
 
     function updateMap(id: number) {
+        //console.log("update: " + id)
         for (var t_index in tiles) {
             var tile: CBMesh = tiles[t_index];
             //var distance = tile.position.distanceTo(id_to_tile.get(id).position)
             var distance = matrix[id-1][tile.ID-1];
-            console.log(distance + " --- " + id + " --- "+ tile.ID)
-            console.log(matrix.length + "  "+matrix[id-1].length)
+            console.log(distance)
             var timeout = distance * 5 //the more distance there is, the more timeout (for a wave effect)
+            //console.log(timeout)
             var color = new THREE.Color("hsl(" + (150-(distance / 2.5)) + ", " + color_s + "%, " + color_l + "%)")
             var material = <THREE.MeshPhongMaterial>tile.material;
 
@@ -353,6 +355,7 @@ function generateColorPalette() {
 
     for (var x = 0; x < total; x++) {
         var value = (150 - ((i * x) / (360 / 150)))
+        //console.log(value)
         var color = new THREE.Color("hsl(" + value + ", " + color_s + "%, " + color_l + "%)")
         colors.push(color); // you can also alternate the saturation and value for even more contrast between the colors
     }
@@ -430,6 +433,7 @@ function click(event) {
     var intersects = raycaster.intersectObjects(tiles);
     if (intersects.length > 0) {
         var tile = <CBMesh>intersects[0].object;
+        //     console.log(tile);
         tile.callback();
     }
 }
@@ -492,6 +496,7 @@ function onWindowResize() {
     var factor = 2;
     var width = window.innerWidth;
     var height = window.innerHeight;
+    //  console.log(factor);
     camera.left = -width / factor;
     camera.right = width / factor;
     camera.top = height / factor;

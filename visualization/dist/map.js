@@ -5,12 +5,11 @@ const three_text2d_1 = require("three-text2d");
 const TWEEN = require("tween.js");
 require('awesomplete');
 const three_orbitcontrols_ts_1 = require("three-orbitcontrols-ts");
-var stops = require('../res/stops.json');
-var cities = require('../res/cities.json');
-var centers = require('../res/centers.json');
-var nodes = require('../res/nodes.json');
-var matrix = require('../res/matrix.json');
-var spark1 = require("url?mimetype=image/png!../res/spark1.png");
+var stops = require('../../res/stops.json');
+var cities = require('../../res/cities.json');
+var centers = require('../../res/centers.json');
+var matrix = require('../../res/matrix.json');
+var spark1 = require("url?mimetype=image/png!../../res/spark1.png");
 var diameter = 3.25;
 var height_fly = 30;
 var height_base = 3.0;
@@ -208,19 +207,20 @@ function genTiles() {
     function updateMap(id) {
         for (var t_index in tiles) {
             var tile = tiles[t_index];
-            var distance = tile.position.distanceTo(id_to_tile.get(id).position);
+            var distance = matrix[id - 1][tile.ID - 1];
+            console.log(distance + " --- " + id + " --- " + tile.ID);
+            console.log(matrix.length + "  " + matrix[id - 1].length);
             var timeout = distance * 5;
             var color = new THREE.Color("hsl(" + (150 - (distance / 2.5)) + ", " + color_s + "%, " + color_l + "%)");
             var material = tile.material;
-            var b = Math.random() >= 0.97;
-            function changeColor(material, color, id, b, time) {
+            function changeColor(material, color, id, time) {
                 return () => {
                     material.color.set(color);
                     if (id in tile_to_sprite) {
                         var sprite = tile_to_sprite[id];
                         sprite.text = tile_to_name[id] + " " + Math.floor(time) + "''";
                     }
-                    if (b) {
+                    if (distance == -1) {
                         material.opacity = 0.6;
                         material.color.set(new THREE.Color("gray"));
                         material.transparent = true;
@@ -230,7 +230,7 @@ function genTiles() {
                     }
                 };
             }
-            new TWEEN.Tween(0).to(100, timeout).onComplete(changeColor(material, color, tile.ID, b, distance)).start();
+            new TWEEN.Tween(0).to(100, timeout).onComplete(changeColor(material, color, tile.ID, distance)).start();
         }
     }
 }
@@ -271,8 +271,8 @@ function generateColorPalette() {
     var arr = matrix.reduce(function (p, c) {
         return p.concat(c);
     });
-    max = Math.max.apply(null, arr);
-    min = Math.min.apply(null, arr);
+    max = 400;
+    min = 0;
     var total = max - min;
     var i = 360 / (total - 1);
     for (var x = 0; x < total; x++) {
@@ -297,7 +297,7 @@ function addColorPalette() {
         tile.castShadow = true;
         tile.receiveShadow = true;
         scene.add(tile);
-        if (i % 15 === 0) {
+        if (i % 30 === 0) {
             var sprite = new three_text2d_1.SpriteText2D(i.toString(), { align: three_text2d_1.textAlign.center, font: '50px Arial', fillStyle: '#FFFFFF', antialias: true });
             sprite.material.depthTest = false;
             sprite.position.set(80 + (i / 5) * diameter * 1.3, -100, 45);
