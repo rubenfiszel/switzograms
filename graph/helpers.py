@@ -6,7 +6,7 @@ def t_str(t):
     return int(t[0])*60 + int(t[1])
 
 def load_csv(mini=False):
-    gtfs = "gtfs/"
+    gtfs = "../gtfs/"
 
     mini_str = ""
     if mini:
@@ -23,9 +23,8 @@ def load_stop_tile():
     qgis = "qgis/"
     csv = pd.read_csv("stops_with_tile_ids.csv")
     stop_tile = {}
-    tile_stop = defaultdict(list)        
+    tile_stop = defaultdict(list)
     for _, t in csv.iterrows():
         stop_tile[t["stop_id"]] = t["tile_id"]
         tile_stop[t["tile_id"]].append(t["tile_id"])
     return stop_tile, tile_stop
-        
