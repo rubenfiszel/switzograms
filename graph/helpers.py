@@ -6,7 +6,7 @@ def t_str(t):
     return int(t[0])*60 + int(t[1])
 
 def load_csv(mini=False):
-    gtfs = "gtfs/"
+    gtfs = "../gtfs/"
 
     mini_str = ""
     if mini:
