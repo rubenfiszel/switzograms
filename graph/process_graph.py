@@ -28,19 +28,21 @@ def compute_all_paths(G, nodes):
         i += 1
 
     matrix = np.zeros((len(nodes), len(nodes)))
-    for source in tqdm(nodes):
-        length = nx.shortest_path_length(G, source=source, weight="weight")
+    for i, source in tqdm(enumerate(nodes)):
+        length = defaultdict(lambda: -1)
+        if source != 0:
+            length = nx.shortest_path_length(G, source=source, weight="weight")
         length = defaultdict(lambda: -1, length)
-        for target in nodes:
-            matrix[n_to_i[source]][n_to_i[target]] = float(length[target])
+        for j, target in enumerate(nodes):
+            matrix[i][j] = float(length[target])
 
     return nodes, matrix.tolist()
 
 def write_all_paths(nodes, matrix):
-    with open("../res/full_nodes", "w+") as nodes_file:
+    with open("../res/nodes", "w+") as nodes_file:
         nodes_file.write(jsonpickle.encode(nodes))
 
-    with open("../res/full_matrix", "w+") as matrix_file:
+    with open("../res/matrix.json", "w+") as matrix_file:
         matrix_file.write(jsonpickle.encode(matrix))
 
     nodes_file.close()
@@ -60,9 +62,8 @@ def load_paths():
 if __name__ == "__main__":
     print("Load graph", datetime.datetime.now().time())
     G = nx.read_gpickle("complete.graph")
-    with open('../res/full_nodes', 'rb') as f:
+    with open('../res/center_nodes', 'rb') as f:
         nodes = pickle.load(f)
-    print(nodes[:10])
     # nodes = G.nodes()[:50] ##TOREPLACEALEXISBYYOURTHING
     nodes, matrix = compute_all_paths(G, nodes)
     write_all_paths(nodes, matrix)
