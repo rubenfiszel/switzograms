@@ -10,6 +10,7 @@ from tqdm import tqdm
 import numpy as np
 import jsonpickle.ext.numpy as jsonpickle_numpy
 import pickle
+import math
 jsonpickle_numpy.register_handlers()
 
 def filter_stops(stop_tile, tile_stop):
@@ -29,12 +30,14 @@ def compute_all_paths(G, nodes):
 
     matrix = np.zeros((len(nodes), len(nodes)))
     for i, source in tqdm(enumerate(nodes)):
-        length = defaultdict(lambda: -1)
+        length = {}
         if source != 0:
             length = nx.shortest_path_length(G, source=source, weight="weight")
-        length = defaultdict(lambda: -1, length)
         for j, target in enumerate(nodes):
-            matrix[i][j] = float(length[target])
+            if length and target in length and not math.isnan(float(length[target])):
+                matrix[i][j] = float(length[target])
+            else:
+                matrix[i][j] = -1
 
     return nodes, matrix.tolist()
 
