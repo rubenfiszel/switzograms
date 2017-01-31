@@ -14,9 +14,9 @@ var matrix: number[][] = require('../../res/matrix.json')
 
 var spark1 = require("url?mimetype=image/png!../../res/spark1.png");
 var diameter = 3.25
-var height_fly = 1;
+var height_fly = 35;
 var height_base = 3.0;
-var height_factor = 1;
+var height_factor = 0.8;
 var dotSize = 6.0;
 
 
@@ -343,7 +343,7 @@ function generateColorPalette() {
     var arr = matrix.reduce(function (p, c) {
         return p.concat(c);
     });
-    max = 400;
+    max = 460;
     min = 0;
 
     var total = max - min;
@@ -366,7 +366,7 @@ function addColorPalette() {
         var mat = material.clone()
         mat.color.set(colors[i])
         var tile = new THREE.Mesh(geometry, mat)
-        tile.position.set(80 + (i / 15) * diameter * 1.3, -100, 40)
+        tile.position.set(80 + (i / 15) * diameter * 1.3, -100, height_fly)
         tile.rotation.x = Math.PI / 2;
         tile.rotation.y = Math.PI / 2;
         tile.updateMatrix();
@@ -385,7 +385,7 @@ function addColorPalette() {
 
         var sprite = new SpriteText2D("Travel time [hours]", { align: textAlign.center, font: '50px Arial', fillStyle: '#FFFFFF', antialias: true })
         sprite.material.depthTest = false;
-        sprite.position.set(120, -90, 45);
+        sprite.position.set(150, -90, 45);
         sprite.scale.set(0.1, 0.1, 0.1)
         scene.add(sprite);
     }
