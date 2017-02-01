@@ -1,24 +1,15 @@
 import THREE = require("three");
-
 import Stats = require("stats.js");
 import { SpriteText2D, textAlign } from 'three-text2d'
 import TWEEN = require('tween.js');
 require('awesomplete');
 import { OrbitControls } from 'three-orbitcontrols-ts';
 
-var stops = require('../../res/stops.json')
-var cities: Map<string, any> = require('../../res/cities.json')
+var stops = require('../../res/stops.json') // transport nodes of Switzerland
+var cities: Map<string, any> = require('../../res/cities.json') 
 
-var centers = require('../../res/centers.json')
-var matrix: number[][] = require('../../res/matrix.json')
-
-var spark1 = require("url?mimetype=image/png!../../res/spark1.png");
-var diameter = 3.25
-var height_fly = 35;
-var height_base = 3.0;
-var height_factor = 0.8;
-var dotSize = 6.0;
-
+var centers = require('../../res/centers.json') // centers of the hexagons 
+var matrix: number[][] = require('../../res/matrix.json') // time from any tile to any tile
 
 // ----- THREE VARIABLES -----
 var stats: Stats;
@@ -35,21 +26,24 @@ var dots: THREE.Points;
 var renderer: THREE.WebGLRenderer;
 var container: HTMLElement;
 var color_s = "80"
-var color_l = "70"
+var color_l = "70" 
+
+var height_base = 3.0;
+var height_factor = 0.8; // height of the hexagons
+var diameter = 3.25; // hexagon diameter
+
+// Variables for displaying the transport nodes (yellow points)
+var spark1 = require("url?mimetype=image/png!../../res/spark1.png");
+var dotSize = 6.0;
+var height_fly = 35;
 
 // ----- CUSTOM CITY SELECTOR -----
-var cityParameters = {
-    cityName: 'Sion',
-    tile_id: 377
-}
-var displayedCities: string[] = []
+var displayedCities: string[] = [] 
 var tile_to_sprite: Map<number, SpriteText2D> = new Map()
 var tile_to_name: Map<number, string> = new Map()
 
-
 init();
 animate();
-
 
 document.getElementById("opennav").style.visibility = "";
 document.getElementById("opennav").onclick = function () { openNav() }
@@ -74,7 +68,7 @@ var awesomplete = new Awesomplete(input, {
 
 document.addEventListener("awesomplete-close", function () {
     var city = (<HTMLInputElement>input).value
-    //  console.log(city)
+    
     if (city in cities) {
         var c = cities[city]
         addCity(city, +c.ID)
@@ -92,7 +86,7 @@ function init() {
     setCamera();
     setControls();
     setLights();
-    //setStats();
+    //setStats(); 
     setFloor();
     setTiles();
     addTexts();
@@ -101,10 +95,14 @@ function init() {
 
 
 function addCity(name, tile_id) {
+    """ Add the label of the city on the map"""
+
+    // City already displayed
     if (name in displayedCities) {
         return
     }
     displayedCities.push(name)
+    // Add city to list
     var cityMenu = document.getElementById("cities")
     var itemMenu = document.createElement('li')
     itemMenu.classList.add('pure-menu-item')
@@ -122,7 +120,6 @@ function addCity(name, tile_id) {
     var removeButton = document.createElement('button')
     removeButton.innerHTML = '&times';
     removeButton.classList.add('closeitem')
-
 
     linkMenu.appendChild(removeButton)
     itemMenu.appendChild(linkMenu)
@@ -169,6 +166,8 @@ function addCity(name, tile_id) {
 }
 
 function addTexts() {
+    """ Add cities with more than 70000 habitants"""
+
     for (var city in cities) {
         var c = cities[city];
         if (+c.population > 70000) {
@@ -191,8 +190,8 @@ function setFloor() {
     var mshFloor = new THREE.Mesh(geoFloor, matFloor);
     mshFloor.receiveShadow = true;
     scene.add(mshFloor);
-
 }
+
 function setRenderer() {
     renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setClearColor(0x323232);
@@ -208,12 +207,11 @@ function setRenderer() {
 }
 
 
-
 function setStats() {
     stats = new Stats();
     stats.dom.style.right = '0px';
     stats.dom.style.left = '';
-    //document.body.appendChild(stats.dom);
+    document.body.appendChild(stats.dom);
 }
 
 function setTiles() {
@@ -223,6 +221,7 @@ function setTiles() {
     // Create points from stops
     genPoints();
 
+    // Create hexagonal tiles
     genTiles();
 
 }
@@ -231,14 +230,14 @@ interface CBMesh extends THREE.Mesh {
     callback: () => any
     ID: number
 }
-function genTiles() {
-    var material = new THREE.MeshPhongMaterial({ color: 0x5e7eff, overdraw: 0.5, shading: THREE.FlatShading, shininess: 0, specular: 0 });
 
+function genTiles() {
+    """ Create an hexagonal tile for each center"""
+    var material = new THREE.MeshPhongMaterial({ color: 0x5e7eff, overdraw: 0.5, shading: THREE.FlatShading, shininess: 0, specular: 0 });
 
     for (var c in centers) {
         createTile(centers[c])
     }
-
 
     function createTile(t) {
         var height = t.h * height_factor + height_base;
@@ -252,15 +251,15 @@ function genTiles() {
         tile.matrixAutoUpdate = false
         tile.ID = t.ID
 
-
         tile.name = "t" + t.ID;
+
+        // Update the colors of the other tiles when the tile is selected
         tile.callback = function () {
             updateMap(t.ID)
         }
 
         tile.castShadow = true;
         tile.receiveShadow = true;
-
         tiles.push(tile);
         id_to_tile.set(t.ID, tile);
         scene.add(tile);
@@ -268,14 +267,15 @@ function genTiles() {
 
 
     function updateMap(id: number) {
+        """ Update the colors of the tiles when a new tile is selected """
         for (var t_index in tiles) {
             var tile: CBMesh = tiles[t_index];
-            //var distance = tile.position.distanceTo(id_to_tile.get(id).position)
+            // Time distance
             var distance = matrix[id-1][tile.ID-1];
             var timeout = Math.max(1, distance * 5) //the more distance there is, the more timeout (for a wave effect)
-            //var color = new THREE.Color("hsl(" + (150-(distance / 2.5)) + ", " + color_s + "%, " + color_l + "%)")
             var color = colors[distance]
             var material = <THREE.MeshPhongMaterial>tile.material;
+            // Set the color of the material
             function changeColor(material, color, id, time): () => any {
                 return () => {
                     material.color.set(color)
@@ -292,20 +292,21 @@ function genTiles() {
                     }
                 }
             }
+            // Delay based on time distance
             new TWEEN.Tween(0).to(100, timeout).onComplete(changeColor(material, color, tile.ID, distance)).start()
         }
     }
-
 }
 
 
 function genPoints() {
-
+    """ Generate the transport nodes of the map"""
     var amount = stops.length
     var positions = new Float32Array(amount * 3);
     var sizes = new Float32Array(amount);
     var colors = new Float32Array(amount * 3);
     var vertex: any = new THREE.Vector3();
+
     for (var stop in stops) {
         var s = stops[stop];
         var height = s.h * height_factor + height_base + 0.2 + height_fly;
@@ -331,7 +332,6 @@ function genPoints() {
         depthTest: false,
         transparent: true
     });
-    //    var material = new THREE.PointsMaterial( { size: 2, sizeAttenuation: false, color: 0x664200 } );
 
     dots = new THREE.Points(geometry, material);
     scene.add(dots);
@@ -340,16 +340,15 @@ function genPoints() {
 
 
 function generateColorPalette() {
+    """ Generate a palette between green and pink (hsl) of 460 different colors (max number of minutes)"""
     var arr = matrix.reduce(function (p, c) {
         return p.concat(c);
     });
     max = 460;
-    min = 0;
 
-    var total = max - min;
-    var i = 360 / (total - 1); // distribute the colors evenly on the hue range
+    var i = 360 / (max - 1); // distribute the colors evenly on the hue range
 
-    for (var x = 0; x < total; x++) {
+    for (var x = 0; x < max; x++) {
         //var value = (150 - ((i * x) / (360 / 150)))
         var value = (120 + ((i*x)/(360/240)))
         var color = new THREE.Color("hsl(" + value + ", " + color_s + "%, " + color_l + "%)")
@@ -358,7 +357,8 @@ function generateColorPalette() {
 }
 
 function addColorPalette() {
-    var num_colors = (max - min);
+    """ Display the color range with the corresponding number of minutes on the bottom right corner """
+    var num_colors = max;
     var material = new THREE.MeshPhongMaterial({ color: 0x5e7eff, overdraw: 0.5, shading: THREE.FlatShading, shininess: 0, specular: 0 });
     var geometry = new THREE.CylinderGeometry(diameter / 1.2, diameter / 1.2, 5, 6);
 
@@ -403,6 +403,7 @@ function onDocumentMove(event) {
     }
 
 }
+
 //to implement click timeout
 function onDocumentDown(event) {
     mouseDown = true
@@ -421,7 +422,7 @@ function onDocumentUp(event) {
 }
 
 function click(event) {
-    //event.preventDefault();
+    """ Detect which tile is selected """
     var mouse = new THREE.Vector2();
     mouse.x = (event.clientX / renderer.domElement.clientWidth) * 2 - 1;
     mouse.y = - (event.clientY / renderer.domElement.clientHeight) * 2 + 1;
@@ -445,7 +446,6 @@ function setCamera() {
 }
 
 function setLights() {
-
     var ambient = new THREE.AmbientLight(0xffffff, 0.15);
     var light = new THREE.DirectionalLight(0xffffff, 0.25);
     light.position.set(200, -100, 300);
@@ -459,18 +459,14 @@ function setLights() {
     light.shadowCameraTop = 200;
     light.shadowCameraBottom = -200;
     light.shadowCameraFar = 500;
-    //  console.log(light.shadowCameraFar)
 
     scene.add(light);
     scene.add(light.target);
     scene.add(ambient);
-
-
-
 }
 
 function setControls() {
-    // Controls (when moving mouse)
+    """ Controls (when moving mouse)"""
     controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.25;
@@ -483,8 +479,6 @@ function setControls() {
     controls.maxAzimuthAngle = Math.PI / 3;
     controls.rotateSpeed = 0.5;
     controls.zoomSpeed = 1.2;
-    
-
 }
 
 function onWindowResize() {
@@ -497,7 +491,6 @@ function onWindowResize() {
     camera.bottom = -height / factor;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
-
 }
 
 function animate() {
@@ -505,7 +498,6 @@ function animate() {
     TWEEN.update();
     //stats.update();
     render();
-
 }
 
 function animateDots() {
@@ -518,7 +510,6 @@ function animateDots() {
         }
         attributes.size.needsUpdate = true;
     }
-
 }
 
 function render() {
