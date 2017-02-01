@@ -73,7 +73,6 @@ function init() {
     setCamera();
     setControls();
     setLights();
-    setStats();
     setFloor();
     setTiles();
     addTexts();
@@ -172,7 +171,6 @@ function setStats() {
     stats = new Stats();
     stats.dom.style.right = '0px';
     stats.dom.style.left = '';
-    document.body.appendChild(stats.dom);
 }
 function setTiles() {
     generateColorPalette();
@@ -401,7 +399,6 @@ function onWindowResize() {
 function animate() {
     requestAnimationFrame(animate);
     TWEEN.update();
-    stats.update();
     render();
 }
 function animateDots() {
