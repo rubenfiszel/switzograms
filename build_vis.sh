@@ -1,4 +1,4 @@
 cd visualization
 npm intall
 tsc
-webpack
+node --max-old-space-size=4096 node_modules/webpack/bin/webpack
