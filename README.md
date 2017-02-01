@@ -56,7 +56,7 @@ To fill this matrix, we create a weighted directed graph of the public transport
 As explained in the previous section, the time distance between the nodes can be approximated from the GTFS schedule data. The weights of the edge of the graph are calculated using the average daily lapse of time of getting from one node to the next.
 
 Once the graph is obtained, the multipoint Dijkstra algorithm is used to compute the time distance from every representant to every representant. The matrix for the total number of nodes is intractable, but the matrix for the representant is more reasonable: as large as the square of the number of tiles, i.e. approx. 1600x1600:
-The image below shows a simplified subgraph of the Lausanne-Zürich trip.
+The image below shows a simplified subgraph of the Lausanne-Zürich trip.
 
 ![Subgraph](screenshots/subgraph.png)
 
@@ -64,7 +64,11 @@ The image below shows a simplified subgraph of the Lausanne-Zürich trip.
 We use Three.js to display the hexagonal map, a JavaScript 3D graphics framework built on top of WebGL.
 The hexagons’ centers are generated with QGIS and their height represents the population, We offer the possibility to add and remove cities from the map through an interactive search bar. 
 
-![alt-text-1](screenshots/transport_nodes.png) ![alt-text-2](screenshots/population.png)
+The yellow points show the transport nodes (bus stops, train stations, etc.)
+![alt-text-1](screenshots/transport_nodes.png) 
+
+Hexagons' height representing the population.
+![alt-text-2](screenshots/population.png)
 
 ## Credits
 
