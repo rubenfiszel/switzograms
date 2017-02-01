@@ -67,7 +67,7 @@ The hexagons’ centers are generated with QGIS and their height represents the 
 The yellow points show the transport nodes (bus stops, train stations, etc.)
 ![alt-text-1](screenshots/transport_nodes.png) 
 
-Height of hexagons representing the population.
+Hexagons' height representing the population.
 ![alt-text-2](screenshots/population.png)
 
 ## Credits
