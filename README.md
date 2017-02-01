@@ -2,7 +2,7 @@
 
 Switzograms is an interactive isochrone map of the public transport of Switzerland.
 
-!(Screenshot)[screenshots/whole_application.png]
+![Screenshot](screenshots/whole_application.png)
 
 Launch your browser on: `visualization/dist/map.html` or live demo also available [here](http://switzograms.ch)
 
