@@ -4,7 +4,6 @@ cd gtfs
 cd ../graph
 python3 create_graph.py
 cd ../notebooks
-python3 files_for_maps.py
 python3 compute_centers.py
 cd ../graph
 python3 process_graph.py
