@@ -55,7 +55,8 @@ We pre-compute the matrix representing the time distance from every tile to ever
 To fill this matrix, we create a weighted directed graph of the public transport nodes of Switzerland.
 As explained in the previous section, the time distance between the nodes can be approximated from the GTFS schedule data. The weights of the edge of the graph are calculated using the average daily lapse of time of getting from one node to the next.
 
-Once the graph is obtained, the multipoint Dijkstra algorithm is used to compute the time distance from every representant to every representant. The matrix for the total number of nodes is intractable, but the matrix for the representant is more reasonable: as large as the square of the number of tiles, i.e. approx. 1600x1600:
+Once the graph is obtained, the multipoint Dijkstra algorithm is used to compute the time distance from every representant to every representant. The matrix for the total number of nodes is intractable, but the matrix for the representant is more reasonable: as large as the square of the number of tiles, i.e. approx. 1600x1600.
+
 The image below shows a simplified subgraph of the Lausanne-Zürich trip.
 
 ![Subgraph](screenshots/subgraph.png)
