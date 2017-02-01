@@ -40,12 +40,14 @@ The GTFS data contains all the transit information of the public transport netwo
 ### Hexagonal Map
 
 We combine the map of Switzerland and the transport nodes into a simplified hexagonal map using QGIS, a great software to create and edit geospatial information.  
+
 ![QGIS](screenshots/qgis.png)
 
 ### Representative nodes
 
 One of the challenges encountered is that a tile contains many nodes. Our tiled map requires a specification for the computation of distance between two tiles. This was achieved by nominating a representative for a given tile to act as its source and target. Of course, the remaining nodes of the tile are still present for the travel computation but only as intermediary steps.
 The most relevant representative is the biggest “hub” of the tile (high-traffic, high-speed travel). Slower modes of transportation branch out from this hub. This hub is identified by selecting the node with the highest average daily affluence (when available as you can see on the points displayed below), otherwise the highest degree of connections amongst all nodes in the tile, when connecting with a subset of nodes of the whole network (important and less important train stations). 
+
 ![QGIS](screenshots/affluence.png)
 
 ### Time Distance Computation
@@ -55,12 +57,14 @@ As explained in the previous section, the time distance between the nodes can be
 
 Once the graph is obtained, the multipoint Dijkstra algorithm is used to compute the time distance from every representant to every representant. The matrix for the total number of nodes is intractable, but the matrix for the representant is more reasonable: as large as the square of the number of tiles, i.e. approx. 1600x1600:
 The image below shows a simplified subgraph of the Lausanne-Zürich trip.
+
 ![Subgraph](screenshots/subgraph.png)
 
 ### Visualization
 We use Three.js to display the hexagonal map, a JavaScript 3D graphics framework built on top of WebGL.
 The hexagons’ centers are generated with QGIS and their height represents the population, We offer the possibility to add and remove cities from the map through an interactive search bar. 
 
+![alt-text-1](screenshots/transport_nodes.png) ![alt-text-2](screenshots/population.png)
 
 ## Credits
 
