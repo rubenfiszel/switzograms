@@ -4,7 +4,7 @@ Switzograms is an interactive isochrone map of the public transport of Switzerla
 
 ![Screenshot](screenshots/whole_application.png)
 
-Launch your browser on: `visualization/dist/map.html` or live demo also available [here](http://switzograms.ch)
+Launch your browser on: `visualization/dist/map.html` or live demo also available [here](https://rubenfiszel.github.io/switzograms/visualization/dist/map.html)
 
 ## Rebuild from sources
 
